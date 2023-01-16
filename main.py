@@ -19,7 +19,7 @@ def get_screen_capture():
 
     # Display the picture
     cv2.imshow("OpenCV/Numpy normal", img)
-    print(f"fps: {1 / (time.time() - last_time)}")
+    # print(f"fps: {1 / (time.time() - last_time)}")
 
 
 def get_window_size():
@@ -27,17 +27,23 @@ def get_window_size():
     global window_rect
 
     window_handle = FindWindow(
-        None, "name_prev_ui.png ‎- Photos")
+        None, "gank.jpg ‎- Photos")
     window_rect = GetWindowRect(window_handle)
 
 
 def compare_capture_to_template():
     print("----------------- Comparing image to template -----------")
 
-    result = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
+    result = cv2.matchTemplate(img, template_en, cv2.TM_CCOEFF_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
     # print(, max_val, min_loc, max_loc)
     print(max_val)
+
+    # Check if the template is found
+    if treshold < max_val:
+        print("Found")
+        cv2.rectangle(img, max_loc, (max_loc[0] + 100, max_loc[1] + 100),
+                      (0, 0, 255), 2)
 
 
 def main():
@@ -61,5 +67,7 @@ def main():
 
 
 template = cv2.imread("./lifebar.png", cv2.IMREAD_UNCHANGED)
+template_en = cv2.imread("./lifebar_en.png", cv2.IMREAD_UNCHANGED)
+treshold = 0.35
 
 main()
